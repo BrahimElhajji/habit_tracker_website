@@ -21,3 +21,10 @@ class User(UserMixin, db.Model):
         """Checks if the given password matches the stored hashed password."""
         return check_password_hash(self.password_hash, password)
 
+class Habit(db.Model):
+    """Model representing a habit, linked to a user with a creation timestamp."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    habit_name = db.Column(db.String(200), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

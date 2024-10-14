@@ -5,7 +5,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.web.forms import LoginForm, RegisterForm
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.models import User
+from app.models import User, Habit
 
 web_bp = Blueprint('web', __name__)
 
@@ -21,7 +21,28 @@ def index():
 def dashboard():
     """Renders the user dashboard, accessible only to logged-in users."""
 
-    return '<h1>testing log in</h1>'
+    user = current_user
+    habits = Habit.query.filter_by(user_id=user.id).all()
+    return render_template('dashboard.html', habits=habits)
+
+@web_bp.route('/add_habit', methods=['GET', 'POST'])
+@login_required
+def add_habit():
+    """Handles adding a new habit for the logged-in user."""
+
+    if request.method == 'POST':
+        habit_name = request.form['habit_name']
+        new_habit = Habit(user_id=current_user.id, habit_name=habit_name)
+        try:
+            db.session.add(new_habit)
+            db.session.commit()
+            flash('Habit added successfully!', 'success')
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            flash('Error adding habit. Please try again.', 'danger')
+        return redirect(url_for('web.dashboard'))
+    return render_template('add_habit.html')
 
 @web_bp.route('/login', methods=['GET', 'POST'])
 def login():
