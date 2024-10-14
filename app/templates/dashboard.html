@@ -1,0 +1,22 @@
+i<div class="row">
+    {% for habit in habits %}
+    <div class="col-md-4 mb-4">
+        <div class="card habit-card">
+            <div class="card-body">
+                <h5 class="card-title">{{ habit.habit_name }}</h5>
+                <p class="card-text">
+                    <small class="text-muted">Created on {{ habit.created_at.strftime('%B %d, %Y') }}</small>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info text-center" role="alert">
+            You have no habits. Start by adding a new habit!
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
