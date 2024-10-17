@@ -44,6 +44,50 @@ def add_habit():
         return redirect(url_for('web.dashboard'))
     return render_template('add_habit.html')
 
+@web_bp.route('/delete_habit/<int:habit_id>', methods=['GET', 'POST'])
+@login_required
+def delete_habit(habit_id):
+    """Handles deleting a habit."""
+
+    habit = Habit.query.get_or_404(habit_id)
+    if habit.user_id != current_user.id:
+        flash('You do not have permission to delete this habit.', 'danger')
+        return redirect(url_for('web.dashboard'))
+
+    if request.method == 'POST':
+        try:
+            db.session.delete(habit)
+            db.session.commit()
+            flash('Habit deleted successfully!', 'success')
+            return redirect(url_for('web.dashboard'))
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            flash('Error deleting habit. Please try again.', 'danger')
+    return render_template('delete_habit.html', habit=habit)
+
+@web_bp.route('/edit_habit/<int:habit_id>', methods=['GET', 'POST'])
+@login_required
+def edit_habit(habit_id):
+    """Handles editing a habit."""
+
+    habit = Habit.query.get_or_404(habit_id)
+    if habit.user_id != current_user.id:
+        flash('You do not have permission to edit this habit.', 'danger')
+        return redirect(url_for('web.dashboard'))
+
+    if request.method == 'POST':
+        habit_name = request.form['habit_name']
+        habit.habit_name = habit_name
+        try:
+            db.session.commit()
+            flash('Habit updated successfully!', 'success')
+            return redirect(url_for('web.dashboard'))
+        except Exception as e:
+            db.session.rollback()
+            flash('Error updating habit.  try again.', 'danger')
+    return render_template('edit_habit.html', habit=habit)
+
 @web_bp.route('/login', methods=['GET', 'POST'])
 def login():
     """Handles user login and redirects to the dashboard upon success."""
