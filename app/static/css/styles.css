@@ -1,0 +1,43 @@
+/* Button Styles */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+/* Card Enhancements */
+.card {
+    border: none;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Footer Enhancements */
+.footer {
+    background-color: var(--footer-bg);
+    color: var(--text-color);
+}
+
+/* Additional Custom Styles */
+.habit-card {
+    border-left: 5px solid #0d6efd;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.habit-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Habit - Habit Tracker{% endblock %}
+
+{% block content %}
+<h2>Edit Habit</h2>
+<form method="POST" action="{{ url_for('web.edit_habit', habit_id=habit.id) }}">
+    <div class="form-group">
+        <label for="habit_name">Habit Name:</label>
+        <input type="text" class="form-control" name="habit_name" id="habit_name" value="{{ habit.habit_name }}" required>
+    </div>
+    <button type="submit" class="btn btn-warning">Update Habit</button>
+</form>
+<a href="{{ url_for('web.dashboard') }}" class="btn btn-secondary mt-2">Back to Dashboard</a>
+{% endblock %}

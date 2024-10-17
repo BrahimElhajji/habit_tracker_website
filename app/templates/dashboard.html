@@ -1,4 +1,17 @@
-i<div class="row">
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Habit Tracker{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Your Habits</h2>
+    <a href="{{ url_for('web.add_habit') }}" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Add New Habit
+    </a>
+</div>
+
+<!-- Habits Displayed as Cards -->
+<div class="row">
     {% for habit in habits %}
     <div class="col-md-4 mb-4">
         <div class="card habit-card">
@@ -7,6 +20,17 @@ i<div class="row">
                 <p class="card-text">
                     <small class="text-muted">Created on {{ habit.created_at.strftime('%B %d, %Y') }}</small>
                 </p>
+               <!-- Action Buttons -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                                                <a href="{{ url_for('web.edit_habit', habit_id=habit.id) }}" class="btn btn-warning btn-sm btn-action" title="Edit Habit">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <a href="{{ url_for('web.delete_habit', habit_id=habit.id) }}" class="btn btn-danger btn-sm btn-action" title="Delete Habit">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
