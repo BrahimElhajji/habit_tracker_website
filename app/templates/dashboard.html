@@ -14,22 +14,36 @@
 <div class="row">
     {% for habit in habits %}
     <div class="col-md-4 mb-4">
-        <div class="card habit-card">
+        <div class="card habit-card animate__animated animate__fadeIn">
             <div class="card-body">
                 <h5 class="card-title">{{ habit.habit_name }}</h5>
                 <p class="card-text">
                     <small class="text-muted">Created on {{ habit.created_at.strftime('%B %d, %Y') }}</small>
                 </p>
-               <!-- Action Buttons -->
+                <!-- Progress Bar -->
+                <div class="progress mb-3" aria-label="Habit completion progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ habit_progress[habit.id] }}%;" aria-valuenow="{{ habit_progress[habit.id] }}" aria-valuemin="0" aria-valuemax="100">
+                        {{ habit_progress[habit.id] | round(2) }}%
+                    </div>
+                </div>
+                <!-- Action Buttons -->
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                                                <a href="{{ url_for('web.edit_habit', habit_id=habit.id) }}" class="btn btn-warning btn-sm btn-action" title="Edit Habit">
+                        <form action="{{ url_for('web.complete_habit', habit_id=habit.id) }}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-success btn-sm btn-action" title="Mark as Complete" aria-label="Mark {{ habit.habit_name }} as complete">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        </form>
+                        <a href="{{ url_for('web.edit_habit', habit_id=habit.id) }}" class="btn btn-warning btn-sm btn-action" title="Edit Habit" aria-label="Edit {{ habit.habit_name }}">
                             <i class="fa-solid fa-pencil"></i>
                         </a>
-                        <a href="{{ url_for('web.delete_habit', habit_id=habit.id) }}" class="btn btn-danger btn-sm btn-action" title="Delete Habit">
+                        <a href="{{ url_for('web.delete_habit', habit_id=habit.id) }}" class="btn btn-danger btn-sm btn-action" title="Delete Habit" aria-label="Delete {{ habit.habit_name }}">
                             <i class="fa-solid fa-trash"></i>
                         </a>
                     </div>
+                    <span class="badge bg-info text-dark" aria-label="{{ habit.completions|length }} times completed">
+                        {{ habit.completions|length }} Completed
+                    </span>
                 </div>
             </div>
         </div>
@@ -37,7 +51,7 @@
     {% else %}
     <div class="col-12">
         <div class="alert alert-info text-center" role="alert">
-            You have no habits. Start by adding a new habit!
+            <i class="fa-solid fa-info-circle"></i> You have no habits. Start by adding a new habit!
         </div>
     </div>
     {% endfor %}
