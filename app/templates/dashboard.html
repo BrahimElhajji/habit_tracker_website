@@ -57,4 +57,57 @@
     {% endfor %}
 </div>
 
+<!-- Habit Completion Calendar -->
+<h3 class="mt-5 mb-4">Habit Completion Calendar</h3>
+<div id='calendar' class="animate__animated animate__fadeIn"></div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 'auto',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: [
+                {% for completion in completions %}
+                {
+                    title: '{{ completion.habit.habit_name }}',
+                    start: '{{ completion.date_completed }}',
+                    allDay: true,
+                    color: '#0d6efd'
+                },
+                {% endfor %}
+            ],
+            eventClick: function(info) {
+                // Optional: Handle event click (e.g., show details)
+            },
+            themeSystem: 'standard',
+            selectable: true,
+            editable: false,
+            responsive: true,
+            aspectRatio: 1.8, // Adjust aspect ratio for better mobile view
+            views: {
+                timeGridWeek: {
+                    aspectRatio: 1.5
+                },
+                timeGridDay: {
+                    aspectRatio: 1.2
+                }
+            },
+            windowResize: function(view) {
+                // Adjust calendar layout on window resize if necessary
+            }
+        });
+
+        calendar.render();
+    });
+</script>
 {% endblock %}

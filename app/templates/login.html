@@ -11,15 +11,30 @@
             <div class="mb-3">
                 {{ form.username.label(class="form-label") }}
                 {{ form.username(class="form-control", id="username", placeholder="Enter your username") }}
+                {% for error in form.username.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
             </div>
             <div class="mb-3">
                 {{ form.password.label(class="form-label") }}
                 {{ form.password(class="form-control", id="password", placeholder="Enter your password") }}
+                {% for error in form.password.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-check mb-3">
+                {{ form.remember(class="form-check-input") }}
+                {{ form.remember.label(class="form-check-label") }}
             </div>
             <button type="submit" class="btn btn-primary">
-                                    <i class="fa-solid fa-right-to-bracket"></i> Login
-                                                </button>
+                <i class="fa-solid fa-right-to-bracket"></i> Login
+            </button>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<!-- No custom JavaScript needed for form submission -->
 {% endblock %}
