@@ -12,6 +12,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    habits = db.relationship('Habit', backref='user', lazy=True)
+    completions = db.relationship('HabitCompletion', backref='user', lazy=True)
 
     def set_password(self, password):
         """Hashes and sets the user's password."""
@@ -28,3 +30,12 @@ class Habit(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     habit_name = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    completions = db.relationship('HabitCompletion', backref='habit', lazy=True, cascade='all, delete-orphan')
+
+class HabitCompletion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    habit_id = db.Column(db.Integer, db.ForeignKey('habit.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date_completed = db.Column(db.Date, nullable=False, default=date.today)
+
+    __table_args__ = (db.UniqueConstraint('habit_id', 'date_completed', name='_habit_date_uc'),)
