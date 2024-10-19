@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Logout - Habit Tracker{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <h2 class="mb-4">Logout</h2>
+        <p>Are you sure you want to log out?</p>
+        <button id="logoutButton" class="btn btn-danger me-2">
+            <i class="fa-solid fa-right-from-bracket"></i> Yes, Logout
+        </button>
+        <a href="{{ url_for('web.dashboard') }}" class="btn btn-secondary">
+            <i class="fa-solid fa-times"></i> Cancel
+        </a>
+    </div>
+</div>
+{% endblock %}
