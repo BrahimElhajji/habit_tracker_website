@@ -8,15 +8,77 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS (for later use) -->
+    <!-- Animate.css for Animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block head %}
+    <!-- Additional head content can be added here -->
+    {% endblock %}
 </head>
 <body>
-    <!-- Main Content (Placeholder) -->
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fa-solid fa-list-check"></i> Habit Tracker
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('web.login') }}">
+                                <i class="fa-solid fa-right-to-bracket"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('web.register') }}">
+                                <i class="fa-solid fa-user-plus"></i> Register
+                            </a>
+                        </li>
+                                    </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Main Content -->
     <main class="container mt-4" id="mainContent">
         {% block content %}
         <!-- Page-specific content will be injected here -->
         {% endblock %}
     </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">&copy; {{ current_year }} Habit Tracker. All rights reserved.</span>
+        </div>
+    </footer>
+
+    {% block scripts %}
+    <!-- Additional scripts can be added here -->
+    {% endblock %}
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Inline Script to Handle Flash Messages -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        showToast("{{ message|escape }}", "{{ category }}");
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        });
+    </script>
 </body>
 </html>
