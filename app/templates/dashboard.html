@@ -5,9 +5,21 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Your Habits</h2>
-    <a href="{{ url_for('web.add_habit') }}" class="btn btn-primary">
-        <i class="fa-solid fa-plus"></i> Add New Habit
-    </a>
+    <div>
+        <!-- Add the "Connect Google Calendar" button here -->
+        {% if not google_connected %}
+        <a href="{{ url_for('web.google_auth') }}" class="btn btn-secondary me-2">
+            <i class="fa-solid fa-calendar-check"></i> Connect Google Calendar
+        </a>
+        {% else %}
+        <span class="badge bg-success">Google Calendar Connected</span>
+        {% endif %}
+
+        <!-- Existing Add New Habit button -->
+        <a href="{{ url_for('web.add_habit') }}" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> Add New Habit
+        </a>
+    </div>
 </div>
 
 <!-- Habits Displayed as Cards -->
