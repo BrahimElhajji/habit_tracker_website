@@ -31,6 +31,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('web.profile') }}">
+                                <i class="fa-solid fa-user"></i> {{ current_user.username }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('web.logout') }}">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('web.login') }}">
                                 <i class="fa-solid fa-right-to-bracket"></i> Login
@@ -41,6 +53,7 @@
                                 <i class="fa-solid fa-user-plus"></i> Register
                             </a>
                         </li>
+                    {% endif %}
                                     </ul>
             </div>
         </div>
@@ -82,3 +95,4 @@
     </script>
 </body>
 </html>
+
