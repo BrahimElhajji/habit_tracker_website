@@ -124,4 +124,3 @@ section::before {
 [data-bs-theme="dark"] body, [data-bs-theme="light"] body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
-
