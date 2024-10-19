@@ -3,6 +3,8 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 """Creates and configures a Flask app
 using the given config class."""
@@ -10,6 +12,7 @@ using the given config class."""
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
+jwt = JWTManager()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -17,6 +20,8 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
+    jwt.init_app(app)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     from app.models import User
 
@@ -24,8 +29,10 @@ def create_app(config_class=Config):
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    from app.api.auth import auth_bp
     from app.web.routes import web_bp
 
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(web_bp)
 
     return app
