@@ -30,9 +30,17 @@ def create_app(config_class=Config):
         return User.query.get(int(user_id))
 
     from app.api.auth import auth_bp
+    from app.api.habits import habits_bp
+    from app.api.completions import completions_bp
     from app.web.routes import web_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(habits_bp, url_prefix='/api/habits')
+    app.register_blueprint(completions_bp, url_prefix='/api/completions')
     app.register_blueprint(web_bp)
+    
+
+    from app.utils import register_error_handlers
+    register_error_handlers(app)
 
     return app

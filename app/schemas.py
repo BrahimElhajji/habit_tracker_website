@@ -2,8 +2,7 @@
 
 from marshmallow import Schema, fields, validate
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-from app.models import User
-
+from app.models import User, Habit, HabitCompletion
 
 class UserSchema(SQLAlchemyAutoSchema):
     """Schema for the User model 
@@ -16,3 +15,19 @@ class UserSchema(SQLAlchemyAutoSchema):
     
     password = fields.String(load_only=True, required=True, validate=validate.Length(min=6))
 
+class HabitSchema(SQLAlchemyAutoSchema):
+    """Schema for the Habit model, excluding user_id from input and including foreign keys."""
+
+    user_id = fields.Int(dump_only=True)
+    class Meta:
+        model = Habit
+        load_instance = True
+        include_fk = True
+
+class HabitCompletionSchema(SQLAlchemyAutoSchema):
+    """Schema for the HabitCompletion model, including foreign keys."""
+
+    class Meta:
+        model = HabitCompletion
+        load_instance = True
+        include_fk = True
