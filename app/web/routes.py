@@ -1,12 +1,14 @@
 """Defines routes for user authentication, registration, and dashboard access."""
 
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.web.forms import LoginForm, RegisterForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User, Habit, HabitCompletion
 from datetime import date, datetime
+from app.utils import get_google_flow, create_google_event
+import json
 
 web_bp = Blueprint('web', __name__)
 
@@ -36,7 +38,9 @@ def dashboard():
         progress = (completed_days / total_days) * 100
         habit_progress[habit.id] = min(progress, 100)
 
-    return render_template('dashboard.html', habits=habits, completions=completions, habit_progress=habit_progress)
+   google_connected = True if current_user.google_credentials else False
+   return render_template('dashboard.html', habits=habits, completions=completions, habit_progress=habit_progress, google_connected=google_connected)
+
 
 @web_bp.route('/add_habit', methods=['GET', 'POST'])
 @login_required
@@ -50,6 +54,11 @@ def add_habit():
             db.session.add(new_habit)
             db.session.commit()
             flash('Habit added successfully!', 'success')
+            # Synchronize with Google Calendar
+            if current_user.google_credentials:
+                event_id = create_google_event(current_user, new_habit, event_type='add')
+                new_habit.google_event_id = event_id
+                db.session.commit()
         except Exception as e:
             print(e)
             db.session.rollback()
@@ -71,12 +80,15 @@ def complete_habit(habit_id):
     completion = HabitCompletion.query.filter_by(habit_id=habit_id, date_completed=today).first()
 
     if completion:
-        flash('Habit already complete for today!', 'warning')
+        flash('Habit already completed for today!', 'warning')
     else:
         new_completion = HabitCompletion(habit_id=habit.id, user_id=current_user.id)
         try:
             db.session.add(new_completion)
             db.session.commit()
+            # Ensure that completion does not create a new event, but modifies the existing one
+            create_google_event(current_user, habit, event_type='complete')
+
             flash('Habit marked as completed!', 'success')
         except Exception as e:
             db.session.rollback()
@@ -203,3 +215,30 @@ def register():
             db.session.rollback()
             flash('Error registering user. Please try again.', 'danger')
     return render_template('register.html', form=form)
+
+@web_bp.route('/google_auth')
+@login_required
+def google_auth():
+    """Handles the OAuth 2.0 callback from Google, fetches credentials, and saves them for the current user."""
+
+    flow = get_google_flow()
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true',
+        prompt='consent'
+    )
+    session['state'] = state
+    return redirect(authorization_url)
+
+@web_bp.route('/oauth2callback')
+@login_required
+def oauth2callback():
+    """Handles the OAuth 2.0 callback from Google, fetches credentials, and saves them for the current user."""
+
+    state = session.get('state')
+    flow = get_google_flow()
+    flow.fetch_token(authorization_response=request.url)
+    credentials = flow.credentials
+    current_user.set_google_credentials(credentials)
+    db.session.commit()
+    return redirect(url_for('web.dashboard'))
