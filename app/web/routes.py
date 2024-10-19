@@ -108,6 +108,41 @@ def login():
             flash('Invalid username or password.', 'danger')
     return render_template('login.html', form=form)
 
+@web_bp.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    """Logs out the current user and redirects to the homepage."""
+
+    logout_user()
+    flash('Logged out successfully!', 'success')
+    return redirect(url_for('web.index'))
+
+@web_bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    """Allows the logged-in user to view and update their profile information."""
+
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        if check_password_hash(current_user.password_hash, form.current_password.data):
+            current_user.username = form.username.data
+            current_user.email = form.email.data
+            if form.new_password.data:
+                current_user.password_hash = generate_password_hash(form.new_password.data)
+            try:
+                db.session.commit()
+                flash('Your profile has been updated!', 'success')
+                return redirect(url_for('web.profile'))
+            except Exception as e:
+                db.session.rollback()
+                flash('Error updating profile. Please try again.', 'danger')
+        else:
+            flash('Current password is incorrect.', 'danger')
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    return render_template('profile.html', form=form)
+
 @web_bp.route('/register', methods=['GET', 'POST'])
 def register():
     """Handles user registration and logs in the user upon successful registration."""
