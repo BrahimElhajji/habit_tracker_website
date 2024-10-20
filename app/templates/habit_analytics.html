@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics - {{ habit.habit_name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Analytics for "{{ habit.habit_name }}"</h2>
+    <p><strong>Created On:</strong> {{ habit.created_at.strftime('%B %d, %Y') }}</p>
+    <p><strong>Current Streak:</strong> {{ habit.current_streak }} days</p>
+    <p><strong>Longest Streak:</strong> {{ habit.longest_streak }} days</p>
+
+    <h3 class="mt-4">Last 30 Days</h3>
+    <canvas id="completionChart"></canvas>
+
+    <div class="mt-4">
+        <p><strong>Total Completions:</strong> {{ total_completions }}</p>
+        <p><strong>Completion Rate:</strong> {{ completion_rate }}%</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<!-- Include Chart.js if not already included -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('completionChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar', // You can change this to 'line' if preferred
+            data: {
+                labels: {{ chart_labels | tojson }},
+                datasets: [{
+                    label: 'Habit Completions',
+                    data: {{ chart_data | tojson }},
+                    backgroundColor: 'rgba(13, 110, 253, 0.6)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 1,
+                    // Optional: Set borderRadius for better aesthetics
+                    borderRadius: 5,
+                    hoverBackgroundColor: 'rgba(13, 110, 253, 0.8)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true, // Allows the chart to adjust based on container size
+                scales: {
+                    x: {
+                        ticks: {
+                            maxRotation: 90,
+                            minRotation: 45,
+                            autoSkip: true,
+                            maxTicksLimit: 10 // Adjust based on space
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                return value === 1 ? 'Yes' : 'No';
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Completion'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw === 1 ? 'Completed' : 'Missed';
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false // Hide the legend if only one dataset
+                    },
+                    title: {
+                        display: false,
+                        text: 'Habit Completions Over Last 30 Days'
+                    }
+                }
+            }
+        });
+    });
+</script>
+<style>
+    /* Optional: Set a fixed height for the chart container */
+    #completionChart {
+        height: 400px;
+    }
+</style>
+{% endblock %}
