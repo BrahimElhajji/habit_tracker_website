@@ -1,52 +1,72 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile - Habit Tracker{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <h2 class="mb-4">Your Profile</h2>
-        <form method="POST" action="{{ url_for('profile') }}">
-            {{ form.hidden_tag() }}
-            <div class="mb-3">
-                {{ form.username.label(class="form-label") }}
-                {{ form.username(class="form-control", placeholder="Enter your username") }}
-                {% for error in form.username.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
+<div class="container">
+    <h2>Your Profile</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control") }}
+            {% for error in form.username.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% for error in form.email.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="mb-3">
+            {{ form.current_password.label(class="form-label") }}
+            {{ form.current_password(class="form-control") }}
+            {% for error in form.current_password.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="mb-3">
+            {{ form.new_password.label(class="form-label") }}
+            {{ form.new_password(class="form-control") }}
+            {% for error in form.new_password.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="mb-3">
+            {{ form.confirm.label(class="form-label") }}
+            {{ form.confirm(class="form-control") }}
+            {% for error in form.confirm.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+    </form>
+
+    <h3 class="mt-5">Your Badges</h3>
+    <div class="row">
+        {% for user_badge in user_badges %}
+            <div class="col-md-3 mb-3">
+                <div class="card">
+                    {% if user_badge.badge.icon %}
+                        <img src="{{ url_for('static', filename='images/badges/' ~ user_badge.badge.icon) }}" class="card-img-top" alt="{{ user_badge.badge.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user_badge.badge.name }}</h5>
+                        <p class="card-text">{{ user_badge.badge.description }}</p>
+                        <p class="card-text"><small class="text-muted">Earned on {{ user_badge.earned_at }}</small></p>
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-control", placeholder="Enter your email") }}
-                {% for error in form.email.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    You haven't earned any badges yet. Complete your habits to earn badges!
+                </div>
             </div>
-            <hr>
-            <div class="mb-3">
-                {{ form.current_password.label(class="form-label") }}
-                {{ form.current_password(class="form-control", placeholder="Enter current password") }}
-                {% for error in form.current_password.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="mb-3">
-                {{ form.new_password.label(class="form-label") }}
-                {{ form.new_password(class="form-control", placeholder="Enter new password") }}
-                {% for error in form.new_password.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="mb-3">
-                {{ form.confirm.label(class="form-label") }}
-                {{ form.confirm(class="form-control", placeholder="Confirm new password") }}
-                {% for error in form.confirm.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Update Profile</button>
-            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
-        </form>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
