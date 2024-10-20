@@ -18,8 +18,7 @@ section::before {
     left: 0;
     width: 100%;
     height: 100%;
-    /* Optional: Add overlay for better text readability */
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.1); /* Optional overlay for text readability */
 }
 
 /* Button Styles */
@@ -46,25 +45,74 @@ section::before {
     transform: translateY(-2px);
 }
 
-/* Card Enhancements */
-.card {
-    border: none;
+/* Updated Habit Card Styles */
+.habit-card {
+    border-left: 5px solid #0d6efd;
+    border-radius: 15px;
+    background-color: #f8f9fa;
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 1.5rem;
+}
+
+.habit-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .card-body {
     padding: 2rem;
 }
 
+/* Modern Progress Bar */
+.progress {
+    background-color: #e9ecef;
+    height: 12px;
+    border-radius: 15px;
+}
+
+
+
+/* Action Button Styles */
+.btn-action {
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.btn-action:hover {
+    transform: scale(1.1);
+}
+
+.badge {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 /* Footer Enhancements */
 .footer {
     background-color: var(--footer-bg);
     color: var(--text-color);
+    margin-top: 50px;
+    padding: 20px 0;
+    text-align: center;
 }
 
-/* Adjustments for Dark Mode */
+/* Dark Mode Adjustments */
 [data-bs-theme="dark"] .footer {
     background-color: var(--footer-bg);
     color: var(--text-color);
+}
+
+[data-bs-theme="dark"] body, [data-bs-theme="light"] body {
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Responsive Image */
@@ -94,38 +142,12 @@ section::before {
     background-color: #0dcaf0 !important;
 }
 
-/* Additional Custom Styles */
-.habit-card {
-    border-left: 5px solid #0d6efd;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.habit-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
+/* Calendar Adjustments */
 #calendar {
     max-width: 100%;
     margin: 40px auto;
 }
 
-.btn-action {
-    margin-right: 5px;
-}
-
 .table-responsive {
     overflow-x: auto;
 }
-
-.footer {
-    margin-top: 50px;
-    padding: 20px 0;
-    text-align: center;
-}
-
-/* Transition for theme changes */
-[data-bs-theme="dark"] body, [data-bs-theme="light"] body {
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
