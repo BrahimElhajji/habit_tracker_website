@@ -54,6 +54,9 @@ def create_completion():
         date_completed=date_completed
     )
     db.session.add(new_completion)
+    if date_completed = date.today():
+        habit.update_streak()
+
     db.session.commit()
     
     return jsonify({'completion': completion_schema.dump(new_completion)}), 201

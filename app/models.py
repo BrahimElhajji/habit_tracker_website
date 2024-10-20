@@ -47,6 +47,25 @@ class Habit(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     completions = db.relationship('HabitCompletion', backref='habit', lazy=True, cascade='all, delete-orphan')
     google_credentials = db.Column(db.Text, nullable=True)
+    current_streak = db.Column(db.Integer, default=0)
+    longest_streak = db.Column(db.Integer, default=0)
+    last_completed = db.Column(db.Date, nullable=True)
+
+    def update_streak(self):
+        today = date.today()
+        if self.last_completed:
+            delta = today - self.last_completed
+            if delta.days == 1:
+                self.current_streak += 1
+            elif delta.days > 1:
+                self.current_streak = 1
+        else:
+            self.current_streak = 1
+
+        if self.current_streak > self.longest_streak:
+            self.longest_streak = self.current_streak
+
+        self.last_completed = today
 
 class HabitCompletion(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -84,6 +84,7 @@ def complete_habit(habit_id):
     else:
         new_completion = HabitCompletion(habit_id=habit.id, user_id=current_user.id)
         try:
+            habit.update_streak()
             db.session.add(new_completion)
             db.session.commit()
             # Ensure that completion does not create a new event, but modifies the existing one

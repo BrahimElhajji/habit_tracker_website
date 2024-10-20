@@ -18,7 +18,10 @@ class UserSchema(SQLAlchemyAutoSchema):
 class HabitSchema(SQLAlchemyAutoSchema):
     """Schema for the Habit model, excluding user_id from input and including foreign keys."""
 
-    user_id = fields.Int(dump_only=True)
+    user_id = fields.Int(dump_only=Truer
+    current_streak = fields.Int(dump_only=True)
+    longest_streak = fields.Int(dump_only=True)
+
     class Meta:
         model = Habit
         load_instance = True
