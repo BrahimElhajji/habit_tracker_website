@@ -41,6 +41,10 @@
                         <span class="progress-bar-text">{{ habit_progress[habit.id] | round(2) }}%</span>
                     </div>
                 </div>
+                <!-- Inside habit card in dashboard.html -->
+<a href="{{ url_for('web.habit_analytics', habit_id=habit.id) }}" class="btn btn-info btn-sm" title="View Analytics" aria-label="View analytics for {{ habit.habit_name }}">
+    <i class="fa-solid fa-chart-line"></i> Analytics
+</a>
 
                 <!-- Horizontal Action Buttons -->
                 <div class="d-flex justify-content-between align-items-center">
