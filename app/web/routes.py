@@ -3,10 +3,10 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
-from app.web.forms import LoginForm, RegisterForm
+from app.web.forms import LoginForm, RegisterForm, UpdateProfileForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User, Habit, HabitCompletion
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from app.utils import get_google_flow, create_google_event
 import json
 
@@ -40,6 +40,46 @@ def dashboard():
 
    google_connected = True if current_user.google_credentials else False
    return render_template('dashboard.html', habits=habits, completions=completions, habit_progress=habit_progress, google_connected=google_connected)
+
+
+@web_bp.route('/analytics/<int:habit_id>')
+@login_required
+def habit_analytics(habit_id):
+    """Displays the analytics for a specific habit
+    including completions and completion rate for the last 30 days
+    """
+    habit = Habit.query.get_or_404(habit_id)
+    if habit.user_id != current_user.id:
+        flash('You do not have permission to view this analytics.', 'danger')
+        return redirect(url_for('web.dashboard'))
+    
+    today = date.today()
+    start_date = today - timedelta(days=29)
+
+    date_list = [start_date + timedelta(days=x) for x in range(0, 30)]
+
+    completions = HabitCompletion.query.filter(
+        HabitCompletion.habit_id == habit_id,
+        HabitCompletion.date_completed >= start_date,
+        HabitCompletion.date_completed <= today
+    ).all()
+
+    completion_dates = {completion.date_completed for completion in completions}
+
+    chart_data = [1 if single_date in completion_dates else 0 for single_date in date_list]
+    chart_labels = [single_date.strftime('%Y-%m-%d') for single_date in date_list]
+
+    total_completions = len(completions)
+    completion_rate = (total_completions / 30) * 100
+
+    return render_template(
+        'habit_analytics.html',
+        habit=habit,
+        chart_labels=chart_labels,
+        chart_data=chart_data,
+        total_completions=total_completions,
+        completion_rate=round(completion_rate, 2)
+    )
 
 
 @web_bp.route('/add_habit', methods=['GET', 'POST'])
