@@ -1,153 +1,149 @@
-/* Apply Google Font */
+/* General Enhancements */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
+    line-height: 1.6;
+}
+
+/* Navbar Enhancements */
+.navbar {
+    background-color: #0d6efd;
+    padding: 1rem;
+}
+.navbar-brand {
+    display: flex;
+    align-items: center;
 }
 
 /* Hero Section Enhancements */
-section {
-    position: relative;
-}
-
-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.1); /* Optional overlay for text readability */
+section.vh-100 {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 2rem;
+    text-align: center;
 }
 
 /* Button Styles */
 .btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: #007bff;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
 }
-
 .btn-primary:hover {
-    background-color: #0b5ed7;
+    background-color: #0056b3;
     transform: translateY(-2px);
 }
-
 .btn-outline-primary {
-    color: #0d6efd;
-    border-color: #0d6efd;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    border: 2px solid #007bff;
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    color: #007bff;
+    transition: all 0.3s ease;
 }
-
 .btn-outline-primary:hover {
-    background-color: #0d6efd;
-    color: #ffffff;
+    background-color: #007bff;
+    color: #fff;
     transform: translateY(-2px);
 }
 
-/* Updated Habit Card Styles */
+/* Habit Card Enhancements */
 .habit-card {
-    border-left: 5px solid #0d6efd;
-    border-radius: 15px;
-    background-color: #f8f9fa;
+    border: 1px solid #e3e3e3;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
-    padding: 1.5rem;
+    padding: 1rem;
 }
-
 .habit-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
 }
 
-.card-body {
-    padding: 2rem;
+/* Form Styles */
+.form-control {
+    border-radius: 8px;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s ease;
+}
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-/* Modern Progress Bar */
-.progress {
-    background-color: #e9ecef;
-    height: 12px;
-    border-radius: 15px;
+/* Dark Mode Styles */
+[data-bs-theme="dark"] body {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+[data-bs-theme="dark"] .navbar {
+    background-color: #1f1f1f;
+}
+[data-bs-theme="dark"] .btn-primary {
+    background-color: #0b5ed7;
+}
+[data-bs-theme="dark"] .btn-outline-primary {
+    border-color: #0b5ed7;
+    color: #0b5ed7;
+}
+[data-bs-theme="dark"] .habit-card {
+    background-color: #1f1f1f;
+    border-color: #333;
 }
 
-
-
-/* Action Button Styles */
-.btn-action {
-    padding: 8px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
-    border-radius: 50%;
-    margin-right: 5px;
-}
-
-.btn-action:hover {
-    transform: scale(1.1);
-}
-
-.badge {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 15px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Footer Enhancements */
-.footer {
-    background-color: var(--footer-bg);
-    color: var(--text-color);
-    margin-top: 50px;
-    padding: 20px 0;
-    text-align: center;
-}
-
-/* Dark Mode Adjustments */
-[data-bs-theme="dark"] .footer {
-    background-color: var(--footer-bg);
-    color: var(--text-color);
-}
-
-[data-bs-theme="dark"] body, [data-bs-theme="light"] body {
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Responsive Image */
-.img-fluid {
-    max-height: 400px;
-    object-fit: contain;
-}
-
-/* Customize Toasts */
+/* Toast Notification Styles */
 .toast {
     min-width: 250px;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-
 .text-bg-success {
-    background-color: #198754 !important;
+    background-color: #28a745 !important;
 }
-
 .text-bg-danger {
     background-color: #dc3545 !important;
 }
 
-.text-bg-warning {
-    background-color: #ffc107 !important;
+/* Footer Enhancements */
+.footer {
+    background-color: #f8f9fa;
+    padding: 2rem 0;
+    color: #6c757d;
+}
+[data-bs-theme="dark"] .footer {
+    background-color: #1f1f1f;
+    color: #ccc;
 }
 
-.text-bg-info {
-    background-color: #0dcaf0 !important;
-}
-
-/* Calendar Adjustments */
+/* Calendar Enhancements */
 #calendar {
     max-width: 100%;
     margin: 40px auto;
+    padding: 2rem;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+[data-bs-theme="dark"] #calendar {
+    background-color: #2b2b2b;
 }
 
-.table-responsive {
-    overflow-x: auto;
+/* Utility Classes */
+.mt-5 {
+    margin-top: 3rem !important;
+}
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+.gap-3 {
+    gap: 1rem;
 }
