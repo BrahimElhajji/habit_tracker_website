@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
 from app.models import Habit, HabitCompletion
 from app.schemas import HabitCompletionSchema
+from app.gamification import check_and_award_badges
 from datetime import datetime
 
 completions_bp = Blueprint('completions_api', __name__)
@@ -56,8 +57,13 @@ def create_completion():
     db.session.add(new_completion)
     if date_completed = date.today():
         habit.update_streak()
-
-    db.session.commit()
+    try:
+        db.session.commit()
+        # Check and award badges
+        check_and_award_badges(user_id, habit)
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': 'Error marking habit as completed.'}), 500
     
     return jsonify({'completion': completion_schema.dump(new_completion)}), 201
 

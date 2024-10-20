@@ -5,7 +5,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.web.forms import LoginForm, RegisterForm, UpdateProfileForm
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.models import User, Habit, HabitCompletion
+from app.models import User, Habit, HabitCompletion, UserBadge, Badge
 from datetime import date, datetime, timedelta
 from app.utils import get_google_flow, create_google_event
 import json
@@ -234,7 +234,9 @@ def profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
-    return render_template('profile.html', form=form)
+    user_badges = UserBadge.query.filter_by(user_id=current_user.id).all()
+    return render_template('profile.html', form=form, user_badges=user_badges)
+
 
 @web_bp.route('/register', methods=['GET', 'POST'])
 def register():

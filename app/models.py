@@ -17,6 +17,8 @@ class User(UserMixin, db.Model):
     habits = db.relationship('Habit', backref='user', lazy=True)
     completions = db.relationship('HabitCompletion', backref='user', lazy=True)
     google_credentials = db.Column(db.Text, nullable=True)
+    badges = db.relationship('UserBadge', backref='user', lazy=True)
+
 
     def set_password(self, password):
         """Hashes and sets the user's password."""
@@ -66,6 +68,20 @@ class Habit(db.Model):
             self.longest_streak = self.current_streak
 
         self.last_completed = today
+
+class Badge(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    description = db.Column(db.String(200), nullable=False)
+    icon = db.Column(db.String(100), nullable=True)  # Optional: Icon name or URL
+    user_badges = db.relationship('UserBadge', back_populates='badge', lazy=True, cascade='all, delete-orphan')
+
+class UserBadge(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    badge_id = db.Column(db.Integer, db.ForeignKey('badge.id'), nullable=False)
+    earned_at = db.Column(db.DateTime, default=datetime.utcnow)
+    badge = db.relationship('Badge', back_populates='user_badges', lazy=True)
 
 class HabitCompletion(db.Model):
     id = db.Column(db.Integer, primary_key=True)

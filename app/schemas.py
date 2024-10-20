@@ -2,7 +2,8 @@
 
 from marshmallow import Schema, fields, validate
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-from app.models import User, Habit, HabitCompletion
+from app.models import User, Habit, HabitCompletion, Badge, UserBadge
+
 
 class UserSchema(SQLAlchemyAutoSchema):
     """Schema for the User model 
@@ -34,3 +35,17 @@ class HabitCompletionSchema(SQLAlchemyAutoSchema):
         model = HabitCompletion
         load_instance = True
         include_fk = True
+
+class BadgeSchema(SQLAlchemyAutoSchema):
+"""Schema for serializing and deserializing Badge instances."""
+    class Meta:
+        model = Badge
+        load_instance = True
+
+class UserBadgeSchema(SQLAlchemyAutoSchema):
+    """Schema for serializing and deserializing UserBadge instances, including nested Badge details."""
+    badge = fields.Nested(BadgeSchema)
+    
+    class Meta:
+        model = UserBadge
+        load_instance = True
